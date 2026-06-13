@@ -1,0 +1,96 @@
+{
+  "title": "Clinical Trials & Drug Data Aggregator input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "sources": {
+      "title": "Sources",
+      "type": "array",
+      "description": "Official US government APIs to query. All sources are JSON APIs and require no browser scraping.",
+      "editor": "select",
+      "default": ["clinical_trials", "openfda_drugs", "openfda_recalls"],
+      "items": {
+        "type": "string",
+        "enum": ["clinical_trials", "openfda_drugs", "openfda_recalls"],
+        "enumTitles": ["ClinicalTrials.gov studies", "openFDA drug labels/NDC", "openFDA drug recalls"]
+      },
+      "uniqueItems": true
+    },
+    "query": {
+      "title": "Search query",
+      "type": "string",
+      "description": "General keyword used for selected sources. Examples: aspirin, diabetes, oncology, melanoma.",
+      "editor": "textfield",
+      "default": "aspirin"
+    },
+    "conditions": {
+      "title": "Trial conditions",
+      "type": "array",
+      "description": "Optional clinical trial condition terms, such as diabetes or breast cancer.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      }
+    },
+    "drugNames": {
+      "title": "Drug names",
+      "type": "array",
+      "description": "Optional drug names for openFDA and trial searches.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "title": "Trial status filter",
+      "type": "string",
+      "description": "Optional ClinicalTrials.gov overall status filter.",
+      "editor": "select",
+      "default": "all",
+      "enum": ["all", "RECRUITING", "ACTIVE_NOT_RECRUITING", "NOT_YET_RECRUITING", "COMPLETED", "TERMINATED", "WITHDRAWN", "UNKNOWN"],
+      "enumTitles": ["All", "Recruiting", "Active, not recruiting", "Not yet recruiting", "Completed", "Terminated", "Withdrawn", "Unknown"]
+    },
+    "phase": {
+      "title": "Trial phase filter",
+      "type": "string",
+      "description": "Optional ClinicalTrials.gov phase filter.",
+      "editor": "select",
+      "default": "all",
+      "enum": ["all", "NA", "EARLY_PHASE1", "PHASE1", "PHASE2", "PHASE3", "PHASE4"],
+      "enumTitles": ["All", "Not applicable", "Early Phase 1", "Phase 1", "Phase 2", "Phase 3", "Phase 4"]
+    },
+    "maxResults": {
+      "title": "Maximum records",
+      "type": "integer",
+      "description": "Maximum clean non-personal records saved across all selected sources.",
+      "editor": "number",
+      "default": 10,
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "openFdaApiKey": {
+      "title": "openFDA API key",
+      "type": "string",
+      "description": "Optional openFDA API key for higher rate limits. You may also set OPENFDA_API_KEY as an environment variable.",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "userAgent": {
+      "title": "User-Agent",
+      "type": "string",
+      "description": "Descriptive User-Agent sent to official public APIs.",
+      "editor": "textfield",
+      "default": "ClinicalTrialsDrugDataAggregator/1.0 public-data-research"
+    },
+    "proxyConfiguration": {
+      "title": "Proxy configuration",
+      "type": "object",
+      "description": "Not required for official JSON APIs, included for Apify compatibility.",
+      "editor": "proxy",
+      "default": {
+        "useApifyProxy": false
+      }
+    }
+  },
+  "required": []
+}

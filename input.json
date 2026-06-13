@@ -1,0 +1,11 @@
+{
+  "sources": ["clinical_trials", "openfda_drugs", "openfda_recalls"],
+  "query": "aspirin",
+  "drugNames": ["aspirin"],
+  "status": "all",
+  "phase": "all",
+  "maxResults": 10,
+  "proxyConfiguration": {
+    "useApifyProxy": false
+  }
+}

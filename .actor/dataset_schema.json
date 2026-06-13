@@ -1,0 +1,86 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "source": { "type": "string", "title": "Source" },
+    "query": { "type": "string", "title": "Query" },
+    "recordType": { "type": "string", "title": "Record Type" },
+    "recordId": { "type": "string", "title": "Record ID" },
+    "title": { "type": "string", "title": "Title" },
+    "name": { "type": "string", "title": "Name" },
+    "status": { "type": "string", "title": "Status" },
+    "phase": { "type": "string", "title": "Phase" },
+    "studyType": { "type": "string", "title": "Study Type" },
+    "conditions": { "type": "array", "title": "Conditions" },
+    "interventions": { "type": "array", "title": "Interventions" },
+    "genericName": { "type": "string", "title": "Generic Name" },
+    "brandName": { "type": "string", "title": "Brand Name" },
+    "sponsorOrManufacturer": { "type": "string", "title": "Sponsor / Manufacturer" },
+    "collaborators": { "type": "array", "title": "Collaborators" },
+    "enrollmentCount": { "type": "integer", "title": "Enrollment" },
+    "startDate": { "type": "string", "title": "Start Date" },
+    "completionDate": { "type": "string", "title": "Completion / Recall Date" },
+    "lastUpdateDate": { "type": "string", "title": "Last Updated" },
+    "recallDate": { "type": "string", "title": "Recall Date" },
+    "classification": { "type": "string", "title": "Classification" },
+    "productType": { "type": "string", "title": "Product Type" },
+    "route": { "type": "string", "title": "Route" },
+    "dosageForm": { "type": "string", "title": "Dosage Form" },
+    "ndc": { "type": "string", "title": "NDC" },
+    "recallReason": { "type": "string", "title": "Recall Reason" },
+    "adverseEventCount": { "type": "integer", "title": "Adverse Event Count" },
+    "locationsSummary": { "type": "array", "title": "Locations" },
+    "sourceUrl": { "type": "string", "title": "Source URL" },
+    "attribution": { "type": "string", "title": "Attribution" },
+    "scrapedAt": { "type": "string", "title": "Scraped At" }
+  },
+  "views": {
+    "records": {
+      "title": "Records",
+      "transformation": {
+        "fields": [
+          "source",
+          "query",
+          "recordType",
+          "recordId",
+          "title",
+          "status",
+          "phase",
+          "conditions",
+          "genericName",
+          "brandName",
+          "sponsorOrManufacturer",
+          "enrollmentCount",
+          "completionDate",
+          "recallDate",
+          "classification",
+          "adverseEventCount",
+          "sourceUrl",
+          "scrapedAt"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "source": { "label": "Source" },
+          "query": { "label": "Query" },
+          "recordType": { "label": "Record Type" },
+          "recordId": { "label": "Record ID" },
+          "title": { "label": "Title" },
+          "status": { "label": "Status" },
+          "phase": { "label": "Phase" },
+          "conditions": { "label": "Conditions" },
+          "genericName": { "label": "Generic Name" },
+          "brandName": { "label": "Brand Name" },
+          "sponsorOrManufacturer": { "label": "Sponsor / Manufacturer" },
+          "enrollmentCount": { "label": "Enrollment" },
+          "completionDate": { "label": "Completion / Recall Date" },
+          "recallDate": { "label": "Recall Date" },
+          "classification": { "label": "Classification" },
+          "adverseEventCount": { "label": "Adverse Event Count" },
+          "sourceUrl": { "label": "Source URL" },
+          "scrapedAt": { "label": "Scraped At" }
+        }
+      }
+    }
+  }
+}

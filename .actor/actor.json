@@ -1,0 +1,33 @@
+{
+  "actorSpecification": 1,
+  "name": "clinical-trials-drug-data-aggregator",
+  "title": "Clinical Trials & Drug Data Aggregator",
+  "description": "Aggregate non-personal clinical trial, drug label, NDC, recall, and aggregate adverse-event metrics from official US government open APIs.",
+  "version": "1.0",
+  "dockerfile": "Dockerfile",
+  "input": "../INPUT_SCHEMA.json",
+  "readme": "../README.md",
+  "categories": ["OTHER", "AUTOMATION"],
+  "pricingInfo": {
+    "pricingModel": "PAY_PER_EVENT",
+    "pricingPerEvent": {
+      "actorChargeEvents": {
+        "trial-record-scraped": {
+          "eventTitle": "Trial/drug record scraped",
+          "eventDescription": "Charged once for each clean non-personal clinical trial, drug, or recall record saved to the dataset.",
+          "eventPriceUsd": 0.004,
+          "isPrimaryEvent": true,
+          "isOneTimeEvent": false
+        }
+      }
+    }
+  },
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  },
+  "defaultRunOptions": {
+    "build": "latest",
+    "memoryMbytes": 1024,
+    "timeoutSecs": 14400
+  }
+}

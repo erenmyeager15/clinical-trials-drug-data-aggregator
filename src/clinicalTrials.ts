@@ -1,5 +1,14 @@
 import type { ClinicalDrugRecord, CtGovSearchResponse, CtGovStudy } from './types.js';
-import { fetchJson, firstText, normalizeDate, normalizeText, numberOrNull, redactPersonalText, uniqueStrings } from './utils.js';
+import {
+  fetchJson,
+  firstText,
+  normalizeDate,
+  normalizeText,
+  numberOrNull,
+  organizationText,
+  redactPersonalText,
+  uniqueStrings,
+} from './utils.js';
 
 const API_BASE = 'https://clinicaltrials.gov/api/v2';
 const ATTRIBUTION = 'ClinicalTrials.gov public study data from the U.S. National Library of Medicine.';
@@ -30,7 +39,7 @@ function normalizeTrial(study: CtGovStudy, query: string | null): ClinicalDrugRe
     type: redactPersonalText(intervention.type),
   }));
   const locations = (section?.contactsLocationsModule?.locations ?? []).slice(0, 25).map((location) => ({
-    facility: redactPersonalText(location.facility),
+    facility: organizationText(location.facility),
     city: redactPersonalText(location.city),
     country: redactPersonalText(location.country),
   }));
@@ -49,8 +58,10 @@ function normalizeTrial(study: CtGovStudy, query: string | null): ClinicalDrugRe
     interventions,
     genericName: null,
     brandName: null,
-    sponsorOrManufacturer: redactPersonalText(section?.sponsorCollaboratorsModule?.leadSponsor?.name),
-    collaborators: uniqueStrings((section?.sponsorCollaboratorsModule?.collaborators ?? []).map((collaborator) => collaborator.name)),
+    sponsorOrManufacturer: organizationText(section?.sponsorCollaboratorsModule?.leadSponsor?.name),
+    collaborators: (section?.sponsorCollaboratorsModule?.collaborators ?? [])
+      .map((collaborator) => organizationText(collaborator.name))
+      .filter((collaborator): collaborator is string => collaborator !== null),
     enrollmentCount: numberOrNull(section?.designModule?.enrollmentInfo?.count),
     startDate: normalizeDate(section?.statusModule?.startDateStruct?.date),
     completionDate: normalizeDate(section?.statusModule?.completionDateStruct?.date),

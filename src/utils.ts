@@ -25,6 +25,30 @@ export function firstText(values: unknown): string | null {
   return redactPersonalText(values);
 }
 
+const ORGANIZATION_MARKER =
+  /\b(university|hospital|institute|institutes|center|centre|clinic|medical|health|healthcare|pharma|pharmaceutical|therapeutics?|biotech|laborator(?:y|ies)|foundation|trust|ministry|department|agency|administration|government|corp(?:oration)?|company|co\.?|inc\.?|llc|ltd\.?|limited|plc|gmbh|pvt|private|research|group|services|school|college|society|association|council|authority|systems|nhs|llp)\b/i;
+
+function looksLikePersonName(text: string): boolean {
+  if (ORGANIZATION_MARKER.test(text) || /[&@]/.test(text)) return false;
+  if (/^dr\.?\s+/i.test(text)) return true;
+
+  const normalized = text
+    .replace(/\b(md|phd|mbbs|ms|mrs|mr|prof|professor)\b\.?/gi, '')
+    .replace(/[.,]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const tokens = normalized.split(/\s+/).filter(Boolean);
+  if (tokens.length < 2 || tokens.length > 4) return false;
+
+  return tokens.every((token) => /^[A-Z](?:[a-z]+)?\.?$/.test(token) || /^[A-Z][a-z]+(?:-[A-Z][a-z]+)?$/.test(token));
+}
+
+export function organizationText(value: unknown): string | null {
+  const text = redactPersonalText(value);
+  if (!text) return null;
+  return looksLikePersonName(text) ? null : text;
+}
+
 export function normalizeDate(value: unknown): string | null {
   const text = normalizeText(value);
   if (!text) return null;

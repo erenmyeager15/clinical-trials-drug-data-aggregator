@@ -66,20 +66,19 @@ function hasForbiddenField(record: ClinicalDrugRecord): boolean {
   return Object.keys(record).some((key) => forbidden.test(key));
 }
 
-async function pushAndCharge(record: ClinicalDrugRecord): Promise<boolean> {
+async function pushAndCharge(record: ClinicalDrugRecord): Promise<{ saved: boolean; shouldContinue: boolean }> {
   if (hasForbiddenField(record)) {
     log.warning(`Skipped record with forbidden field name: ${record.recordId}`);
-    return true;
+    return { saved: false, shouldContinue: true };
   }
 
-  await Actor.pushData(record);
-  const chargeResult = await Actor.charge({ eventName: CHARGE_EVENT });
+  const chargeResult = await Actor.pushData(record, CHARGE_EVENT);
+  const saved = chargeResult.chargedCount > 0 || !chargeResult.eventChargeLimitReached;
   if (chargeResult.eventChargeLimitReached) {
-    log.warning('User spending limit reached after saving the last clean record. Stopping further collection.');
-    return false;
+    return { saved, shouldContinue: false };
   }
 
-  return true;
+  return { saved, shouldContinue: true };
 }
 
 await Actor.init();
@@ -126,17 +125,28 @@ try {
         if (savedCount >= input.maxResults || sourceSaved >= perSourceBudget) break;
         const dedupeKey = `${record.source}:${record.recordId}`;
         if (seenIds.has(dedupeKey)) continue;
-        seenIds.add(dedupeKey);
+        const result = await pushAndCharge(record);
+        if (result.saved) {
+          seenIds.add(dedupeKey);
+          savedCount += 1;
+          sourceSaved += 1;
+        }
 
-        shouldContinue = await pushAndCharge(record);
-        savedCount += 1;
-        sourceSaved += 1;
-        if (!shouldContinue) break;
+        shouldContinue = result.shouldContinue;
+        if (!shouldContinue) {
+          const message = `Stopped at the user's spending limit after ${savedCount} clean record(s).`;
+          await Actor.setStatusMessage(message);
+          log.warning(message);
+          break;
+        }
       }
     }
   }
 
-  log.info(`Finished. Saved ${savedCount} clean non-personal records.`);
+  if (shouldContinue) {
+    await Actor.setStatusMessage(`Finished with ${savedCount} clean non-personal record(s).`);
+    log.info(`Finished. Saved ${savedCount} clean non-personal records.`);
+  }
 } finally {
   await Actor.exit();
 }

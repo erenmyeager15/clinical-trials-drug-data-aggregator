@@ -1,0 +1,14 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "Clinical Trials & Drug Data Aggregator Output",
+  "description": "Structured non-personal clinical trial, drug label, NDC, recall, and aggregate adverse-event records from official US government open APIs.",
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "string",
+      "title": "Clinical trial and drug records",
+      "description": "Clean dataset items containing public clinical trial, drug label, recall, sponsor, condition, phase, date, status, source URL, and attribution data.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    }
+  }
+}

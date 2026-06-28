@@ -77,7 +77,7 @@ This Actor uses pay-per-event pricing.
 | --- | --- | --- |
 | `trial-record-scraped` | One clean non-personal trial, drug, or recall record saved | $0.004 |
 
-Charges are made only after a record is pushed to the dataset. Empty searches and failed source requests are not charged.
+Each clean non-personal record is saved and charged atomically. Empty searches, forbidden fields, and failed source requests are not charged, and later source queries stop when the user's spending limit is reached.
 
 ## How to Scrape Clinical Trials and Drug Data
 
